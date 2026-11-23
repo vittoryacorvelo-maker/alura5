@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Segredo da Floresta Dourada</title>
+
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', sans-serif;
+background: linear-gradient(135deg, #21160f, #493222, #765638);
+color: #f8eee0;
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 25px;
+}
+
+.container {
+width: 100%;
+max-width: 850px;
+background: #f5eadb;
+color: #493222;
+border-radius: 22px;
+overflow: hidden;
+box-shadow: 0 15px 45px rgba(0,0,0,0.4);
+}
+
+header {
+background: linear-gradient(120deg, #382418, #795438);
+text-align: center;
+padding: 45px 20px;
+color: #fff2df;
+}
+
+header .icon {
+font-size: 48px;
+margin-bottom: 12px;
+}
+
+header h1 {
+font-size: 30px;
+margin-bottom: 10px;
+}
+
+header p {
+color: #e7c9a5;
+font-size: 15px;
+}
+
+.content {
+padding: 35px;
+}
+
+.tag {
+display: inline-block;
+background: #e7d3ba;
+color: #69452d;
+padding: 7px 15px;
+border-radius: 20px;
+font-size: 12px;
+font-weight: bold;
+margin-bottom: 20px;
+}
+
+h2 {
+font-size: 25px;
+margin-bottom: 15px;
+color: #503321;
+}
+
+.story {
+font-size: 16px;
+line-height: 1.9;
+margin-bottom: 25px;
+color: #654c39;
+}
+
+.options {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.choice {
+background: #fffaf3;
+border: 2px solid #d9bea0;
+border-radius: 12px;
+padding: 16px;
+text-align: left;
+font-size: 15px;
+color: #513622;
+cursor: pointer;
+transition: 0.3s;
+}
+
+.choice:hover {
+background: #795438;
+color: white;
+border-color: #795438;
+transform: translateY(-3px);
+}
+
+.progress-area {
+margin-bottom: 25px;
+}
+
+.progress-text {
+display: flex;
+justify-content: space-between;
+font-size: 12px;
+margin-bottom: 9px;
+color: #795438;
+}
+
+.progress-bar {
+height: 8px;
+background: #dfcfbc;
+border-radius: 10px;
+overflow: hidden;
+}
+
+.progress {
+height: 100%;
+width: 0%;
+background: linear-gradient(90deg, #795438, #c59a61);
+transition: width 0.4s;
+}
+
+.restart {
+display: none;
+margin-top: 25px;
+background: #503321;
+color: white;
+border: none;
+border-radius: 10px;
+padding: 14px 22px;
+cursor: pointer;
+font-size: 14px;
+font-weight: bold;
+}
+
+.restart:hover {
+background: #805b3d;
+}
+
+footer {
+text-align: center;
+padding: 20px;
+background: #e8d7c3;
+color: #795438;
+font-size: 12px;
+}
+
+@media (max-width: 600px) {
+.content {
+padding: 23px;
+}
+
+header h1 {
+font-size: 23px;
+}
+
+h2 {
+font-size: 21px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<div class="icon">🌳</div>
+<h1>O Segredo da Floresta Dourada</h1>
+<p>Uma aventura de mistério, coragem e descobertas.</p>
+</header>
+
+<main class="content">
+
+<div class="progress-area">
+<div class="progress-text">
+<span>Progresso da aventura</span>
+<span id="progressNumber">0%</span>
+</div>
+
+<div class="progress-bar">
+<div class="progress" id="progress"></div>
+</div>
+</div>
+
+<span class="tag" id="chapter">CAPÍTULO 01</span>
+
+<h2 id="title">O início da jornada</h2>
+
+<p class="story" id="story">
+Você encontrou um antigo mapa escondido entre os livros
+de sua avó. Nele existe uma mensagem misteriosa sobre
+uma floresta que guarda um grande segredo.
+
+Curiosa para descobrir a verdade, você decide iniciar
+uma aventura. Ao chegar perto da floresta, encontra
+dois caminhos diferentes.
+
+Qual será sua escolha?
+</p>
+
+<div class="options" id="options"></div>
+
+<button class="restart" id="restart">
+↻ Reiniciar aventura
+</button>
+
+</main>
+
+<footer>
+Projeto desenvolvido com HTML, CSS e JavaScript
+<br><br>
+© 2026 | Aventura Interativa
+</footer>
+
+</div>
+
+<script>
+
+// Elementos da página
+const title = document.getElementById("title");
+const story = document.getElementById("story");
+const options = document.getElementById("options");
+const chapter = document.getElementById("chapter");
+const progress = document.getElementById("progress");
+const progressNumber = document.getElementById("progressNumber");
+const restart = document.getElementById("restart");
+
+// História da aventura
+const adventure = {
+
+inicio: {
+chapter: "CAPÍTULO 01",
+title: "O início da jornada",
+text: "Você encontrou um antigo mapa escondido entre os livros de sua avó. Nele existe uma mensagem misteriosa sobre uma floresta que guarda um grande segredo. Curiosa para descobrir a verdade, você decide iniciar uma aventura. Ao chegar perto da floresta, encontra dois caminhos diferentes. Qual será sua escolha?",
+choices: [
+{
+text: "🌲 Entrar pela trilha das árvores",
+next: "trilha"
+},
+{
+text: "🏚️ Investigar uma cabana abandonada",
+next: "cabana"
+}
+]
+},
+
+trilha: {
+chapter: "CAPÍTULO 02",
+title: "A trilha misteriosa",
+text: "Você segue pela trilha e encontra uma pequena ponte de madeira. Do outro lado, existe uma luz dourada brilhando entre as árvores. Porém, você também escuta um barulho vindo de dentro da floresta.",
+choices: [
+{
+text: "✨ Seguir a luz dourada",
+next: "luz"
+},
+{
+text: "🔍 Investigar o barulho",
+next: "barulho"
+}
+]
+},
+
+cabana: {
+chapter: "CAPÍTULO 02",
+title: "A cabana esquecida",
+text: "Dentro da cabana, você encontra um diário antigo e uma chave de bronze. No diário, existe uma anotação sobre um tesouro escondido atrás de uma grande árvore.",
+choices: [
+{
+text: "🗝️ Guardar a chave e continuar",
+next: "chave"
+},
+{
+text: "📖 Ler o diário com atenção",
+next: "diario"
+}
+]
+},
+
+luz: {
+chapter: "CAPÍTULO 03",
+title: "O brilho dourado",
+text: "Você segue a luz e encontra uma pequena porta escondida em uma árvore gigante. Ela possui uma fechadura antiga e parece precisar de uma chave especial.",
+choices: [
+{
+text: "🚪 Tentar abrir a porta",
+next: "porta"
+},
+{
+text: "🌿 Procurar pistas ao redor",
+next: "pistas"
+}
+]
+},
+
+barulho: {
+chapter: "CAPÍTULO 03",
+title: "O guardião da floresta",
+text: "Ao investigar o barulho, você encontra uma coruja que parece estar esperando por alguém. Ela deixa cair um pequeno objeto dourado com um símbolo misterioso.",
+choices: [
+{
+text: "🦉 Seguir a coruja",
+next: "coruja"
+},
+{
+text: "🔎 Examinar o objeto",
+next: "objeto"
+}
+]
+},
+
+chave: {
+chapter: "CAPÍTULO 03",
+title: "A chave antiga",
+text: "Você guarda a chave e volta para a floresta. Depois de caminhar por alguns minutos, encontra uma árvore enorme com uma pequena porta escondida em seu tronco.",
+choices: [
+{
+text: "🔑 Usar a chave na porta",
+next: "final"
+},
+{
+text: "🌳 Procurar outro caminho",
+next: "pistas"
+}
+]
+},
+
+diario: {
+chapter: "CAPÍTULO 03",
+title: "As páginas do passado",
+text: "O diário revela que o verdadeiro tesouro não é feito de ouro. Ele está relacionado à história da floresta e a um segredo que foi protegido durante muitos anos. Você encontra um desenho de uma árvore gigante.",
+choices: [
+{
+text: "🌳 Procurar a árvore do desenho",
+next: "pistas"
+},
+{
+text: "🗺️ Conferir o mapa novamente",
+next: "luz"
+}
+]
+},
+
+pistas: {
+chapter: "CAPÍTULO 04",
+title: "A descoberta",
+text: "Entre as raízes da árvore, você encontra uma pequena caixa com símbolos dourados. Ao lado dela existe uma inscrição: 'A verdadeira riqueza está naquilo que preservamos'.",
+choices: [
+{
+text: "📦 Abrir a caixa",
+next: "final"
+}
+]
+},
+
+porta: {
+chapter: "CAPÍTULO 04",
+title: "A porta secreta",
+text: "Você tenta abrir a porta e percebe que existe um mecanismo escondido. Depois de observar os símbolos, encontra uma maneira de destrancá-la. Uma luz dourada ilumina o caminho.",
+choices: [
+{
+text: "✨ Entrar na passagem",
+next: "final"
+}
+]
+},
+
+coruja: {
+chapter: "CAPÍTULO 04",
+title: "O caminho da coruja",
+text: "A coruja leva você até uma árvore antiga. Nela existe uma inscrição que indica onde está escondido o segredo da floresta. Você percebe que está muito perto de descobrir tudo.",
+choices: [
+{
+text: "🌟 Continuar seguindo as pistas",
+next: "final"
+}
+]
+},
+
+objeto: {
+chapter: "CAPÍTULO 04",
+title: "O símbolo dourado",
+text: "Ao examinar o objeto, você percebe que ele possui o mesmo símbolo do mapa. Ele indica uma passagem escondida entre as raízes de uma árvore gigante.",
+choices: [
+{
+text: "🌳 Seguir até a passagem",
+next: "final"
+}
+]
+},
+
+final: {
+chapter: "FINAL DA AVENTURA",
+title: "O verdadeiro tesouro",
+text: "Parabéns! Você finalmente descobriu o segredo da Floresta Dourada. Dentro da passagem, encontra um livro que conta a história daquele lugar e explica a importância de proteger a natureza. Você entende que o maior tesouro não é o ouro, mas a vida, a memória e a beleza que existem ao nosso redor. Sua coragem permitiu que essa história fosse descoberta e preservada. Fim da aventura!",
+choices: []
+}
+};
+
+// Contador de etapas
+let steps = 0;
+const maxSteps = 4;
+
+// Função para mostrar cada parte da história
+function showScene(sceneName) {
+
+const scene = adventure[sceneName];
+
+title.textContent = scene.title;
+story.textContent = scene.text;
+chapter.textContent = scene.chapter;
+
+options.innerHTML = "";
+
+steps++;
+
+const percentage = Math.min(
+Math.round(((steps
+1) / maxSteps) * 100),
+100
+);
+progress.style.width = percentage + "%";
+progressNumber.textContent = percentage + "%";
+
+scene.choices.forEach(function(choice) {
+
+const button = document.createElement("button");
+
+button.classList.add("choice");
+button.textContent = choice.text;
+
+button.dataset.next = choice.next;
+
+button.addEventListener("click", function() {
+showScene(this.dataset.next);
+});
+
+options.appendChild(button);
+
+});
+
+// Final da história
+if (scene.choices.length === 0) {
+
+progress.style.width = "100%";
+progressNumber.textContent = "100%";
+
+restart.style.display = "block";
+} else {
+restart.style.display = "none";
+}
+
+}
+
+// Reiniciar a aventura
+restart.addEventListener("click", function() {
+
+steps = 0;
+showScene("inicio");
+
+});
+
+// Iniciar o jogo
+showScene("inicio");
+
+</script>
+
+</body>
+</html>
